@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Departments{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <div>
+    <h1 class="h3 mb-0">Departments</h1>
+    <p class="text-muted mb-0">{{ departments|length }} department{{ departments|length|pluralize }}</p>
+  </div>
+  {% if perms.employees.add_department %}
+  <a href="{% url 'employees:department_add' %}" class="btn btn-primary"><i class="bi bi-building-add me-1"></i>Add Department</a>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th>
+          <th class="d-none d-md-table-cell">Description</th>
+          <th class="text-center">Employees</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for department in departments %}
+        <tr>
+          <td class="fw-semibold">{{ department.name }}</td>
+          <td class="d-none d-md-table-cell text-muted">{{ department.description|default:"-"|truncatechars:80 }}</td>
+          <td class="text-center">
+            <a href="{% url 'employees:employee_list' %}?department={{ department.pk }}"
+               class="badge text-bg-primary rounded-pill text-decoration-none">{{ department.employee_count }}</a>
+          </td>
+          <td class="text-end text-nowrap">
+            {% if perms.employees.change_department %}
+            <a href="{% url 'employees:department_edit' department.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="bi bi-pencil"></i></a>
+            {% endif %}
+            {% if perms.employees.delete_department %}
+            <a href="{% url 'employees:department_delete' department.pk %}" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></a>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center text-muted py-5">No departments yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

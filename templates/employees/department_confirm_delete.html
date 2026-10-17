@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Department{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card border-danger">
+      <div class="card-header bg-danger text-white">
+        <i class="bi bi-exclamation-triangle me-2"></i>Confirm deletion
+      </div>
+      <div class="card-body">
+        <p class="lead">Delete the department <strong>{{ department.name }}</strong>?</p>
+        {% if employee_count %}
+        <div class="alert alert-danger">
+          This department still has {{ employee_count }} employee{{ employee_count|pluralize }}.
+          It cannot be deleted until they are moved to another department or removed.
+        </div>
+        {% else %}
+        <div class="alert alert-warning">This action cannot be undone.</div>
+        {% endif %}
+        <form method="post" data-single-submit>
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger" {% if employee_count %}disabled{% endif %}>
+            <i class="bi bi-trash me-1"></i>Yes, delete
+          </button>
+          <a href="{% url 'employees:department_list' %}" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

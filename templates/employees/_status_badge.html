@@ -1,0 +1,4 @@
+{% if employee.status == "ACTIVE" %}<span class="badge text-bg-success">{{ employee.get_status_display }}</span>
+{% elif employee.status == "ON_LEAVE" %}<span class="badge text-bg-warning">{{ employee.get_status_display }}</span>
+{% elif employee.status == "RESIGNED" %}<span class="badge text-bg-secondary">{{ employee.get_status_display }}</span>
+{% else %}<span class="badge text-bg-danger">{{ employee.get_status_display }}</span>{% endif %}

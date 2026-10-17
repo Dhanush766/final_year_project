@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+  <div>
+    <h1 class="h3 mb-0">Dashboard</h1>
+    <p class="text-muted mb-0">Overview of your workforce</p>
+  </div>
+  <div class="d-flex gap-2">
+    {% if perms.employees.add_employee %}
+    <a href="{% url 'employees:employee_add' %}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Add Employee</a>
+    {% endif %}
+    {% if perms.employees.add_department %}
+    <a href="{% url 'employees:department_add' %}" class="btn btn-outline-primary"><i class="bi bi-building-add me-1"></i>Add Department</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card border-start border-primary border-4 h-100">
+      <div class="card-body">
+        <div class="text-muted small">Total Employees</div>
+        <div class="stat-number">{{ total_employees }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card border-start border-success border-4 h-100">
+      <div class="card-body">
+        <div class="text-muted small">Active Employees</div>
+        <div class="stat-number text-success">{{ active_employees }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card border-start border-secondary border-4 h-100">
+      <div class="card-body">
+        <div class="text-muted small">Not Active</div>
+        <div class="stat-number text-secondary">{{ inactive_employees }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card border-start border-info border-4 h-100">
+      <div class="card-body">
+        <div class="text-muted small">Departments</div>
+        <div class="stat-number text-info">{{ department_count }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card h-100">
+      <div class="card-header bg-white fw-semibold">Employees by Department</div>
+      <div class="card-body">
+        {% for dept in department_stats %}
+        <div class="mb-3">
+          <div class="d-flex justify-content-between small">
+            <span class="fw-semibold">{{ dept.name }}</span>
+            <span class="text-muted">{{ dept.total }} employee{{ dept.total|pluralize }} ({{ dept.active }} active)</span>
+          </div>
+          <div class="progress" role="progressbar" aria-label="{{ dept.name }} share"
+               aria-valuenow="{{ dept.percent }}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width: {{ dept.percent }}%">{{ dept.percent }}%</div>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-muted mb-0">No departments yet. Create one to get started.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card mb-3">
+      <div class="card-header bg-white fw-semibold">Employment Status</div>
+      <ul class="list-group list-group-flush">
+        {% for item in status_breakdown %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ item.label }}
+          <a class="badge text-bg-primary rounded-pill text-decoration-none"
+             href="{% url 'employees:employee_list' %}?status={{ item.value }}">{{ item.count }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-white fw-semibold">Recently Added</div>
+      <ul class="list-group list-group-flush">
+        {% for employee in recent_employees %}
+        <li class="list-group-item">
+          <a href="{% url 'employees:employee_detail' employee.pk %}" class="fw-semibold text-decoration-none">{{ employee.full_name }}</a>
+          <div class="small text-muted">{{ employee.designation }} &middot; {{ employee.department.name }}</div>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-muted">No employees yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

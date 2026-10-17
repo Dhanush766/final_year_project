@@ -1,0 +1,49 @@
+/* Custom styles for the Employee Management System.
+   Bootstrap provides the base look; this file adds small refinements. */
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.navbar-brand {
+  letter-spacing: 0.2px;
+}
+
+.card {
+  border: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.stat-card .stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.table > :not(caption) > * > * {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+.table-hover > tbody > tr:hover {
+  background-color: rgba(13, 110, 253, 0.04);
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+/* Keep long email addresses from breaking the layout on small screens */
+td .text-muted.small {
+  word-break: break-all;
+}
+
+@media (max-width: 575.98px) {
+  .stat-card .stat-number {
+    font-size: 1.6rem;
+  }
+}
